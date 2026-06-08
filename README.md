@@ -224,4 +224,4 @@ MIT — free to use, adapt, and build on with attribution.
 **Barry Ugochukwu** — Data Scientist & Agricultural Economist  
 [barryugo1000@gmail.com](mailto:barryugo1000@gmail.com) · [@small_chuks](https://x.com/small_chuks) · [barryugo1.github.io](https://barryugo1.github.io)
 
-> Part of the [Atlas](https://barryugo1.github.io) project — visual economic essays about West Africa.
+> Part of the [The Long Run](httpsd://barryugo1.github.io) Analytical essays at the intersection of economics, machine learning, and agriculture.
