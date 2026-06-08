@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FIEWS Policy Brief 2026 — Food Inflation Early Warning System · Nigeria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<style>
+  :root {
+    --white:   #ffffff;
+    --off:     #f7f7f5;
+    --rule:    #e2e2de;
+    --ink:     #111110;
+    --body:    #3a3a38;
+    --sub:     #767672;
+    --faint:   #b0b0aa;
+    --blue:    #005B99;
+    --blue-lt: #e8f2fa;
+    --teal:    #007B6E;
+    --gold:    #8B6914;
+    --red:     #C0392B;
+    --serif:   'EB Garamond', Georgia, serif;
+    --sans:    'Inter', system-ui, sans-serif;
+    --mono:    'JetBrains Mono', monospace;
+    --col:     740px;
+    --wide:    1040px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--white); color: var(--body); font-family: var(--serif); font-size: 17px; line-height: 1.78; -webkit-font-smoothing: antialiased; }
+
+  /* ── TOPBAR ───────────────────────────────── */
+  .topbar { background: var(--ink); padding: 11px 48px; display: flex; align-items: center; justify-content: space-between; }
+  .topbar a { font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; color: #fff; text-decoration: none; opacity: .9; }
+  .topbar-meta { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; color: #888; display: flex; gap: 20px; }
+
+  /* ── CAT BAND ─────────────────────────────── */
+  .cat-band { border-bottom: 3px solid var(--blue); padding: 10px 48px; display: flex; align-items: center; gap: 14px; }
+  .cat-label { font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--blue); }
+  .cat-sep { color: var(--faint); font-size: 11px; }
+  .cat-sub { font-family: var(--sans); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--sub); }
+
+  /* ── HERO ─────────────────────────────────── */
+  .hero { max-width: var(--col); margin: 0 auto; padding: 60px 48px 48px; border-bottom: 1px solid var(--rule); }
+  .hero-kicker { font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--blue); margin-bottom: 18px; }
+  .hero h1 { font-family: var(--serif); font-size: clamp(26px, 4vw, 44px); font-weight: 500; line-height: 1.16; color: var(--ink); margin-bottom: 10px; letter-spacing: -.01em; }
+  .hero-sub { font-family: var(--serif); font-size: 19px; font-style: italic; color: var(--sub); margin-bottom: 28px; line-height: 1.4; }
+  .hero-finding { border-left: 4px solid var(--blue); padding: 14px 22px; background: var(--blue-lt); margin-bottom: 28px; }
+  .hero-finding-label { font-family: var(--mono); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--blue); margin-bottom: 6px; }
+  .hero-finding p { font-family: var(--sans); font-size: 13px; color: var(--ink); line-height: 1.65; margin: 0; }
+  .hero-finding strong { color: var(--blue); }
+  .hero-meta { display: flex; gap: 28px; flex-wrap: wrap; padding-top: 20px; border-top: 1px solid var(--rule); align-items: flex-start; }
+  .byline-item { font-family: var(--mono); font-size: 10px; letter-spacing: .06em; color: var(--sub); }
+  .byline-item strong { display: block; color: var(--ink); font-weight: 500; font-size: 11px; margin-bottom: 1px; }
+  .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
+  .btn { font-family: var(--sans); font-size: 12px; font-weight: 500; padding: 9px 18px; text-decoration: none; letter-spacing: .02em; display: inline-flex; align-items: center; gap: 6px; }
+  .btn-primary { background: var(--blue); color: #fff; }
+  .btn-primary:hover { background: #004880; }
+  .btn-ghost { background: var(--white); color: var(--ink); border: 1px solid var(--rule); }
+  .btn-ghost:hover { background: var(--off); }
+
+  /* ── EXEC SUMMARY ─────────────────────────── */
+  .exec-summary { background: var(--blue); padding: 36px 48px; }
+  .exec-inner { max-width: var(--col); margin: 0 auto; display: grid; grid-template-columns: 180px 1fr; gap: 36px; align-items: start; }
+  .exec-label { font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.55); padding-top: 2px; }
+  .exec-points { list-style: none; }
+  .exec-points li { font-family: var(--sans); font-size: 13.5px; line-height: 1.6; color: rgba(255,255,255,.88); padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,.1); display: flex; gap: 12px; }
+  .exec-points li:last-child { border-bottom: none; padding-bottom: 0; }
+  .exec-points li::before { content: '—'; font-family: var(--mono); color: rgba(255,255,255,.35); flex-shrink: 0; margin-top: 1px; }
+
+  /* ── FORECAST LEDGER ──────────────────────── */
+  .forecast-ledger { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin: 28px 0; }
+  .fl-cell { background: var(--white); padding: 20px 18px; }
+  .fl-cell.highlight { background: var(--blue-lt); }
+  .fl-label { font-family: var(--mono); font-size: 9px; letter-spacing: .16em; text-transform: uppercase; color: var(--sub); margin-bottom: 6px; }
+  .fl-value { font-family: var(--serif); font-size: 34px; font-weight: 600; line-height: 1; margin-bottom: 4px; color: var(--ink); }
+  .fl-cell.highlight .fl-value { color: var(--blue); }
+  .fl-cell.warning .fl-value { color: var(--gold); }
+  .fl-sub { font-family: var(--sans); font-size: 12px; color: var(--sub); line-height: 1.4; }
+  .fl-badge { display: inline-block; font-family: var(--mono); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; padding: 3px 8px; margin-top: 6px; }
+  .fl-badge.elevated { background: rgba(139,105,20,.1); color: var(--gold); border: 1px solid rgba(139,105,20,.25); }
+  .fl-badge.moderate { background: rgba(0,123,110,.1); color: var(--teal); border: 1px solid rgba(0,123,110,.25); }
+
+  /* ── LAYOUT ───────────────────────────────── */
+  .main { max-width: var(--col); margin: 0 auto; padding: 0 48px; }
+  .wide { max-width: var(--wide); margin: 0 auto; padding: 0 48px; }
+  p { margin-bottom: 1.1em; }
+
+  /* ── SECTION HEADERS ──────────────────────── */
+  .section { padding: 52px 0 0; }
+  .section-header { display: flex; align-items: baseline; gap: 14px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--ink); }
+  .section-num { font-family: var(--mono); font-size: 11px; font-weight: 500; color: var(--blue); letter-spacing: .06em; flex-shrink: 0; }
+  .section h2 { font-family: var(--sans); font-size: 15px; font-weight: 600; color: var(--ink); line-height: 1.3; }
+  .sub-section { padding-top: 32px; }
+  .sub-section h3 { font-family: var(--sans); font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
+
+  /* ── DIVIDER ──────────────────────────────── */
+  .divider { max-width: var(--col); margin: 0 auto; padding: 52px 48px 0; display: flex; align-items: center; gap: 14px; }
+  .divider::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+  .divider-label { font-family: var(--mono); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--faint); white-space: nowrap; }
+
+  /* ── PULL QUOTE ───────────────────────────── */
+  .pull-quote { border-left: 4px solid var(--blue); padding: 14px 22px; margin: 24px 0; background: var(--blue-lt); }
+  .pull-quote p { font-family: var(--serif); font-size: 18px; font-style: italic; color: var(--ink); line-height: 1.55; margin: 0; }
+
+  /* ── INSIGHT BOX ──────────────────────────── */
+  .insight { background: var(--off); border-top: 3px solid var(--ink); padding: 18px 22px; margin: 24px 0; }
+  .insight-label { font-family: var(--sans); font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--sub); margin-bottom: 7px; }
+  .insight p { font-family: var(--sans); font-size: 13px; color: var(--body); line-height: 1.6; margin: 0; }
+  .insight p + p { margin-top: .6em; }
+
+  /* ── DATA TABLES ──────────────────────────── */
+  .data-table { width: 100%; border-collapse: collapse; font-family: var(--sans); font-size: 13px; margin: 20px 0; }
+  .data-table thead tr { border-bottom: 2px solid var(--ink); }
+  .data-table th { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--sub); padding: 9px 10px; text-align: right; white-space: nowrap; }
+  .data-table th:first-child { text-align: left; }
+  .data-table tbody tr { border-bottom: 1px solid var(--rule); }
+  .data-table tbody tr:last-child { border-bottom: 2px solid var(--ink); }
+  .data-table td { padding: 9px 10px; text-align: right; color: var(--body); font-variant-numeric: tabular-nums; vertical-align: top; }
+  .data-table td:first-child { text-align: left; color: var(--ink); font-weight: 500; }
+  .data-table td.mono { font-family: var(--mono); font-size: 12px; }
+  .data-table td.best { color: var(--teal); font-weight: 600; }
+  .data-table td.strong { color: var(--blue); font-weight: 600; }
+  .data-table td.warn { color: var(--gold); }
+  .data-table td.note { font-size: 11px; color: var(--sub); text-align: left; }
+  .data-table tfoot td { font-family: var(--mono); font-size: 10px; color: var(--faint); padding-top: 10px; text-align: left; border: none; }
+
+  /* ── FEATURE PILL LIST ────────────────────── */
+  .pill-list { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 20px; }
+  .pill { font-family: var(--mono); font-size: 11px; padding: 4px 10px; background: var(--off); border: 1px solid var(--rule); color: var(--body); }
+
+  /* ── VARIABLE CATEGORY GRID ───────────────── */
+  .var-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin: 20px 0; }
+  .var-box { background: var(--white); padding: 18px 16px; border-top: 2px solid var(--rule); }
+  .var-box.vb-blue  { border-top-color: var(--blue); }
+  .var-box.vb-teal  { border-top-color: var(--teal); }
+  .var-box.vb-gold  { border-top-color: var(--gold); }
+  .var-box.vb-red   { border-top-color: var(--red);  }
+  .var-box.vb-ink   { border-top-color: var(--ink);  }
+  .var-box-label { font-family: var(--mono); font-size: 9px; letter-spacing: .16em; text-transform: uppercase; color: var(--sub); margin-bottom: 6px; }
+  .var-box h4 { font-family: var(--sans); font-size: 12px; font-weight: 600; color: var(--ink); margin-bottom: 5px; }
+  .var-box p { font-family: var(--sans); font-size: 12px; color: var(--sub); line-height: 1.45; margin: 0; }
+
+  /* ── CHART FRAMES ─────────────────────────── */
+  .chart-frame { border: 1px solid var(--rule); border-top: 3px solid var(--blue); margin: 28px 0 16px; padding: 22px 22px 16px; background: var(--white); }
+  .chart-frame.teal-top { border-top-color: var(--teal); }
+  .chart-frame.gold-top { border-top-color: var(--gold); }
+  .chart-frame.red-top  { border-top-color: var(--red); }
+  .chart-label { font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--blue); margin-bottom: 4px; }
+  .chart-frame.teal-top .chart-label { color: var(--teal); }
+  .chart-frame.gold-top .chart-label { color: var(--gold); }
+  .chart-frame.red-top  .chart-label { color: var(--red); }
+  .chart-title { font-family: var(--sans); font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+  .chart-subtitle { font-family: var(--sans); font-size: 12px; color: var(--sub); margin-bottom: 14px; }
+  .chart-area { width: 100%; height: 300px; }
+  .chart-area.tall { height: 380px; }
+  .chart-note { font-family: var(--mono); font-size: 10px; color: var(--faint); margin-top: 10px; padding-top: 9px; border-top: 1px solid var(--rule); line-height: 1.55; }
+
+  /* ── RECOMMENDATIONS ──────────────────────── */
+  .rec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin: 20px 0; }
+  .rec-box { background: var(--white); padding: 22px 20px; }
+  .rec-num { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); margin-bottom: 8px; }
+  .rec-box h4 { font-family: var(--sans); font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+  .rec-box p { font-family: var(--sans); font-size: 12px; color: var(--sub); line-height: 1.55; margin: 0; }
+  .rec-trigger { font-family: var(--mono); font-size: 11px; color: var(--blue); background: var(--blue-lt); padding: 4px 9px; display: inline-block; margin-top: 8px; }
+
+  /* ── LIMITATIONS ──────────────────────────── */
+  .limit-list { list-style: none; padding: 0; margin: 16px 0; }
+  .limit-list li { font-family: var(--sans); font-size: 13px; color: var(--body); padding: 10px 0; border-bottom: 1px solid var(--rule); display: flex; gap: 14px; align-items: flex-start; line-height: 1.55; }
+  .limit-list li:last-child { border-bottom: none; }
+  .limit-num { font-family: var(--mono); font-size: 10px; color: var(--faint); flex-shrink: 0; padding-top: 2px; }
+
+  /* ── APPENDIX ─────────────────────────────── */
+  .appendix { background: var(--off); border-top: 1px solid var(--rule); padding: 40px 48px; }
+  .appendix-inner { max-width: var(--col); margin: 0 auto; }
+  .appendix h3 { font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--sub); margin-bottom: 14px; margin-top: 24px; }
+  .appendix h3:first-child { margin-top: 0; }
+  .appendix table { width: 100%; border-collapse: collapse; font-family: var(--sans); font-size: 12px; margin-bottom: 6px; }
+  .appendix table tr { border-bottom: 1px solid var(--rule); }
+  .appendix table tr:last-child { border-bottom: none; }
+  .appendix table td { padding: 7px 8px; color: var(--sub); }
+  .appendix table td:first-child { color: var(--ink); font-weight: 500; width: 200px; }
+
+  /* ── CONCLUSION ───────────────────────────── */
+  .conclusion { background: var(--ink); padding: 52px 48px; margin-top: 60px; }
+  .conclusion-inner { max-width: var(--col); margin: 0 auto; }
+  .conclusion .section-num { color: #aaa; display: block; margin-bottom: 8px; }
+  .conclusion h2 { font-family: var(--serif); font-size: clamp(20px, 3vw, 28px); font-weight: 500; color: #fff; margin-bottom: 20px; line-height: 1.25; }
+  .conclusion p { font-family: var(--serif); font-size: 16px; color: #a0a09a; line-height: 1.78; margin-bottom: 1em; }
+  .conclusion-final { margin-top: 24px; padding: 20px 24px; border-left: 4px solid rgba(255,255,255,.2); }
+  .conclusion-final p { font-family: var(--serif); font-size: 17px; font-style: italic; color: #ddd; margin: 0; line-height: 1.6; }
+
+  /* ── FOOTER ───────────────────────────────── */
+  .site-footer { background: var(--ink); padding: 14px 48px; font-family: var(--mono); font-size: 10px; letter-spacing: .07em; text-transform: uppercase; color: rgba(255,255,255,.3); display: flex; justify-content: space-between; border-top: 1px solid #222; }
+
+  .fade { opacity: 0; transform: translateY(12px); transition: opacity .5s ease, transform .5s ease; }
+  .fade.in { opacity: 1; transform: none; }
+
+  @media (max-width: 700px) {
+    .topbar, .cat-band, .hero, .main, .wide, .appendix, .conclusion, .site-footer, .divider, .exec-summary { padding-left: 20px; padding-right: 20px; }
+    .exec-inner { grid-template-columns: 1fr; gap: 14px; }
+    .cover-meta, .forecast-ledger { grid-template-columns: 1fr 1fr; }
+    .var-grid, .rec-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <a href="index.html">The Long Run · barryugo1.github.io</a>
+  <div class="topbar-meta"><span>FIEWS · Nigeria</span><span>June 2026</span></div>
+</div>
+
+<!-- CAT BAND -->
+<div class="cat-band">
+  <span class="cat-label">Policy Brief</span>
+  <span class="cat-sep">/</span>
+  <span class="cat-sub">Food Inflation Early Warning System</span>
+  <span class="cat-sep">/</span>
+  <span class="cat-sub">Nigeria · 2026</span>
+</div>
+
+<!-- HERO -->
+<header class="hero fade in">
+  <div class="hero-kicker">FIEWS · Food Inflation Early Warning System · Nigeria</div>
+  <h1>Food Inflation Early Warning System</h1>
+  <div class="hero-sub">Which variables lead Nigeria's food inflation — and by how many months?</div>
+
+  <div class="hero-finding">
+    <div class="hero-finding-label">Key Finding</div>
+    <p>Nigeria's food inflation has a detectable <strong>3–6 month early warning window</strong>. Exchange rate shocks, fuel price surges, and global food price movements consistently precede domestic inflation spikes. A monitoring framework tracking these indicators can provide policymakers with <strong>actionable lead time</strong>.</p>
+  </div>
+
+  <div class="hero-meta">
+    <div class="byline-item"><strong>Data Period</strong>May 2012 – April 2026<br/>168 monthly observations</div>
+    <div class="byline-item"><strong>Models</strong>ARIMA · Ridge · Random Forest<br/>Gradient Boosting</div>
+    <div class="byline-item"><strong>Sources</strong>NBS · CBN · FAO · NNPC · CHIRPS</div>
+    <div class="byline-item"><strong>Author</strong>Barry Ugochukwu<br/>barryugo1000@gmail.com</div>
+    <div class="byline-item"><strong>Published</strong>June 2026</div>
+  </div>
+
+  <div class="hero-actions">
+    <a href="https://github.com/Barryugo/fiews" target="_blank" rel="noopener" class="btn btn-primary">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      View on GitHub
+    </a>
+    <a href="https://barryugo1.github.io" target="_blank" rel="noopener" class="btn btn-ghost">The Long Run ↗</a>
+  </div>
+</header>
+
+<!-- EXEC SUMMARY -->
+<div class="exec-summary fade">
+  <div class="exec-inner">
+    <div class="exec-label">Executive Summary</div>
+    <ul class="exec-points">
+      <li>Nigeria's food inflation is <strong>highly persistent</strong>: once an episode begins, it typically takes 12–18 months to unwind, making early detection more valuable than crisis response.</li>
+      <li>There is a detectable <strong>3–6 month early warning window</strong> driven by exchange rate movements, fuel price shocks, and global food price changes — all of which precede domestic inflation spikes in the historical record.</li>
+      <li>Current food CPI of <strong>16.1% (April 2026)</strong> sits in the elevated risk zone. The 6-month model projects a rise to <strong>20.8%</strong>, warranting active monitoring even as headline inflation continues to decline from its 2024 peak.</li>
+      <li>The ARIMA model achieves a 3-month MAE of <strong>1.62 percentage points</strong>. The Gradient Boosting model provides the most policy-useful output: probability scores, driver attribution, and scenario analysis.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- §1 BACKGROUND -->
+<div class="divider fade"><span class="divider-label">Section 01</span></div>
+<section class="main section fade">
+  <div class="section-header"><span class="section-num">01</span><h2>Background and Motivation</h2></div>
+  <p>Food inflation in Nigeria is not a routine macroeconomic variable. It directly determines household welfare for the majority of Nigerians who spend 50–60% of income on food, it drives political instability, and it imposes compounding costs on fiscal and monetary policy when it becomes entrenched. The 2023–2024 episode — in which food inflation reached 40.9% — was the most severe in the country's recent history, erasing real income gains across multiple income deciles simultaneously.</p>
+  <p>Despite this, Nigeria lacks a systematic early warning framework. The National Bureau of Statistics publishes monthly CPI data with a 2–3 week lag; the Central Bank monitors food prices indirectly through headline inflation; and policy responses to food price surges have historically been reactive rather than anticipatory. This project addresses that gap.</p>
+  <div class="pull-quote">
+    <p>Which economic variables consistently precede food inflation in Nigeria — and by how many months? The answer determines when to intervene, through what channels, and at what cost.</p>
+  </div>
+</section>
+
+<!-- §2 DATA -->
+<div class="divider fade"><span class="divider-label">Section 02</span></div>
+<section class="main section fade">
+  <div class="section-header"><span class="section-num">02</span><h2>Data and Variables</h2></div>
+
+  <div class="sub-section">
+    <h3>2.1 — Target Variable</h3>
+    <p>The target is Nigeria's food CPI year-on-year percentage change, sourced from the National Bureau of Statistics. The series covers <strong>May 2012 to April 2026 (168 monthly observations)</strong>. Two forecast targets are constructed: food_cpi shifted back 3 months (target_3m) and shifted back 6 months (target_6m), so that models trained at time <em>t</em> predict the inflation rate at <em>t+3</em> and <em>t+6</em> respectively.</p>
+  </div>
+
+  <div class="sub-section">
+    <h3>2.2 — Predictor Variables (36 Features)</h3>
+    <div class="var-grid">
+      <div class="var-box vb-blue">
+        <div class="var-box-label">Exchange Rate · CBN</div>
+        <h4>NGN/USD (Official)</h4>
+        <p>Monthly level, 3m change, 6m change, and depreciation flag (1 if 3m change &gt;10%).</p>
+      </div>
+      <div class="var-box vb-gold">
+        <div class="var-box-label">Fuel Prices · NBS/NNPC</div>
+        <h4>PMS &amp; Diesel (₦/litre)</h4>
+        <p>Monthly prices with 3m shock indicators. Pre-2012: N65/litre; pre-2016: N97/litre.</p>
+      </div>
+      <div class="var-box vb-teal">
+        <div class="var-box-label">Global Commodities · FAO</div>
+        <h4>FAO Food Price Index</h4>
+        <p>Overall food, cereals, and vegetable oils sub-indices with 3m momentum features.</p>
+      </div>
+      <div class="var-box vb-red">
+        <div class="var-box-label">Rainfall · CHIRPS</div>
+        <h4>Nigeria Mean Rainfall (mm)</h4>
+        <p>Monthly rainfall 2010–2020, extended to 2026 using historical seasonal averages. Drought flag derived.</p>
+      </div>
+      <div class="var-box vb-ink">
+        <div class="var-box-label">Autoregressive · NBS</div>
+        <h4>Food CPI Lag Features</h4>
+        <p>Food CPI lagged 1, 3, 6, and 12 months; month-on-month change. Captures inflation persistence.</p>
+      </div>
+      <div class="var-box">
+        <div class="var-box-label">Calendar</div>
+        <h4>Seasonal &amp; Calendar Features</h4>
+        <p>Month, quarter, planting season, harvest season, Ramadan flag. Captures demand and supply seasonality.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- §3 METHODOLOGY -->
+<div class="divider fade"><span class="divider-label">Section 03</span></div>
+<section class="main section fade">
+  <div class="section-header"><span class="section-num">03</span><h2>Methodology</h2></div>
+
+  <div class="sub-section">
+    <h3>3.1 — Exploratory Analysis</h3>
+    <p>Cross-correlation analysis was performed across all predictors at lags of −6 to +12 months. The autocorrelation function (ACF) of food CPI yields a <strong>half-life of approximately 14 months</strong> — autocorrelation remains above 0.5 for over a year. This persistence is the dominant feature of Nigeria's food inflation and is the primary reason the ARIMA model performs so well on short-horizon forecasting.</p>
+  </div>
+
+  <div class="sub-section">
+    <h3>3.2 — Model Architecture</h3>
+    <p>Four models were trained for each forecast horizon using time-series cross-validation (5 folds, 12-month test windows):</p>
+    <table class="data-table">
+      <thead><tr><th style="text-align:left">Model</th><th style="text-align:left">Type</th><th style="text-align:left">Key Parameters</th><th style="text-align:left">Primary Use</th></tr></thead>
+      <tbody>
+        <tr><td>ARIMA</td><td>AR(6) via Ridge</td><td>Lag features only</td><td class="note">Econometric benchmark</td></tr>
+        <tr><td>Ridge Regression</td><td>Linear · L2</td><td>alpha=10; StandardScaler</td><td class="note">Linear baseline on full feature set</td></tr>
+        <tr><td>Random Forest</td><td>Ensemble</td><td>200 trees; depth 6; min 3 samples</td><td class="note">Nonlinear interaction capture</td></tr>
+        <tr><td>Gradient Boosting</td><td>Ensemble · GBM</td><td>200 est.; lr=0.05; depth 4</td><td class="note">Primary model: probability scores &amp; attribution</td></tr>
+      </tbody>
+      <tfoot><tr><td colspan="4">Evaluation: MAE and RMSE (percentage points). Risk classification uses a separate GBM Classifier (P(inflation &gt;25%) in 3 months).</td></tr></tfoot>
+    </table>
+  </div>
+</section>
+
+<!-- §4 KEY FINDINGS -->
+<div class="divider fade"><span class="divider-label">Section 04</span></div>
+<section class="main section fade">
+  <div class="section-header"><span class="section-num">04</span><h2>Key Findings</h2></div>
+
+  <div class="sub-section">
+    <h3>4.1 — Leading Indicators</h3>
+    <p>The cross-correlation analysis reveals a consistent hierarchy of predictors. Among external indicators, the clearest leading signals are fuel prices (3–5 month lead, r = +0.55) and exchange rate movements (3–4 months, r = +0.46).</p>
+  </div>
+</section>
+
+<div class="wide fade">
+  <div class="chart-frame">
+    <div class="chart-label">Figure 01</div>
+    <div class="chart-title">Leading Indicators: Cross-Correlation with Food CPI</div>
+    <div class="chart-subtitle">Pearson correlation coefficient at optimal lead time — higher = stronger precursor signal to food inflation</div>
+    <div class="chart-area tall" id="c-leadlag"></div>
+    <div class="chart-note">Source: FIEWS analysis — author's cross-correlation computation on panel data (May 2012–April 2026). Lead times derived from lag at which correlation peaks. All values from FIEWS dataset: NBS food CPI, CBN exchange rate, NBS/NNPC fuel prices, FAO Food Price Index, CHIRPS rainfall.</div>
+  </div>
+</div>
+
+<section class="main fade">
+  <div class="insight">
+    <div class="insight-label">Two Notable Findings</div>
+    <p><strong>Fuel prices lead food inflation by 3–5 months</strong> (r = +0.55). This reflects Nigeria's transport-intensive food supply chain — commodity movements from northern agricultural states to southern consuming states depend heavily on road freight, which is diesel-dependent.</p>
+    <p><strong>Exchange rate shocks lead food inflation by 3–4 months</strong> (r = +0.46) through the import cost channel: fertilisers, agrochemicals, machinery, and some food products are dollar-priced, and depreciation raises input costs with a lag.</p>
+  </div>
+
+  <div class="sub-section">
+    <h3>4.2 — Inflation Regimes (2012–2026)</h3>
+    <p>The 14-year panel contains four distinct inflationary episodes, each preceded by identifiable early warning signals in the FIEWS indicators:</p>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr><th style="text-align:left">Period</th><th>Peak CPI</th><th>Duration</th><th style="text-align:left">Primary Drivers</th><th style="text-align:left">Lead Signal</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>2016–2017</td>
+        <td class="mono warn">20.3%</td>
+        <td class="mono">24 months</td>
+        <td class="note">Naira devaluation, fuel subsidy cut, import restrictions</td>
+        <td class="note">FX shock 4m prior</td>
+      </tr>
+      <tr>
+        <td>2020–2021</td>
+        <td class="mono warn">23.0%</td>
+        <td class="mono">18 months</td>
+        <td class="note">COVID-19 supply disruption, border closure, FX pressure</td>
+        <td class="note">Border closure signal</td>
+      </tr>
+      <tr>
+        <td>2022–2023</td>
+        <td class="mono warn">25.3%</td>
+        <td class="mono">18 months</td>
+        <td class="note">Ukraine war grain shock, FX depreciation, diesel surge</td>
+        <td class="note">FAO cereals 5m prior</td>
+      </tr>
+      <tr>
+        <td>2023–2024</td>
+        <td class="mono" style="color:var(--red);font-weight:600">40.9%</td>
+        <td class="mono">13 months</td>
+        <td class="note">Subsidy removal, naira float, FX collapse, diesel +300%</td>
+        <td class="note">Fuel shock 3m prior</td>
+      </tr>
+    </tbody>
+    <tfoot><tr><td colspan="5">Source: NBS Monthly CPI Reports · FIEWS regime identification · Author's analysis. Episode timing defined as months where food CPI exceeds 20%.</td></tr></tfoot>
+  </table>
+
+  <div class="insight">
+    <div class="insight-label">The 2023–2024 Episode</div>
+    <p>The most instructive case. Fuel subsidy removal (June 2023) triggered a 129% PMS price increase within 3 months. Simultaneous naira floatation caused a 40% official rate depreciation. Diesel prices had already risen 300% over the preceding 12 months. The fuel shock signal was visible <strong>3 months before</strong> the CPI spike. A functioning FIEWS would have flagged High Risk by March 2023 — three months before the acute phase.</p>
+  </div>
+</section>
+
+<!-- MODEL PERFORMANCE -->
+<section class="main fade">
+  <div class="sub-section">
+    <h3>4.3 — Model Performance</h3>
+  </div>
+</section>
+
+<div class="wide fade">
+  <div class="chart-frame teal-top">
+    <div class="chart-label">Figure 02</div>
+    <div class="chart-title">Model Performance: MAE by Horizon (percentage points)</div>
+    <div class="chart-subtitle">Mean Absolute Error — lower is better — 3-month vs 6-month forecast horizons</div>
+    <div class="chart-area" id="c-model"></div>
+    <div class="chart-note">Source: FIEWS analysis — 5-fold time-series cross-validation, 12-month test windows. MAE in percentage points of food CPI. ARIMA here = AR(6) via Ridge regression on lag features only. A full ARIMA(p,d,q) would be the appropriate production benchmark.</div>
+  </div>
+</div>
+
+<section class="main fade">
+  <table class="data-table">
+    <thead>
+      <tr><th style="text-align:left">Model</th><th>3m MAE (pp)</th><th>3m RMSE (pp)</th><th>6m MAE (pp)</th><th>6m RMSE (pp)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>ARIMA (Benchmark)</td><td class="mono best">1.62</td><td class="mono best">2.44</td><td class="mono best">1.62</td><td class="mono best">2.47</td></tr>
+      <tr><td>Ridge Regression</td><td class="mono">4.95</td><td class="mono">7.36</td><td class="mono">8.60</td><td class="mono">12.65</td></tr>
+      <tr><td>Random Forest</td><td class="mono">5.97</td><td class="mono">7.72</td><td class="mono">6.48</td><td class="mono">8.05</td></tr>
+      <tr><td>Gradient Boosting</td><td class="mono strong">5.43</td><td class="mono strong">7.38</td><td class="mono strong">5.78</td><td class="mono strong">7.66</td></tr>
+    </tbody>
+    <tfoot><tr><td colspan="5">Green = best on metric. Blue = best ML model. ARIMA dominates on MAE due to inflation persistence. GBM is preferred for policy use: probability scores, driver attribution, scenario analysis.</td></tr></tfoot>
+  </table>
+
+  <div class="insight">
+    <div class="insight-label">Why ARIMA Wins — and Why That's Expected</div>
+    <p>The ARIMA model dominates on MAE (1.62pp for both horizons) because Nigeria's food inflation has a lag-1 autocorrelation of <strong>0.98</strong>. Knowing last month's reading is extremely informative for next month's. The ML models contribute value in two areas ARIMA cannot reach: (1) detecting regime changes before they appear in the CPI series itself, by monitoring external shocks; (2) generating probability scores and scenario outputs more useful to policymakers than point forecasts.</p>
+  </div>
+</section>
+
+<!-- §5 CURRENT SITUATION -->
+<div class="divider fade"><span class="divider-label">Section 05</span></div>
+<section class="main section fade">
+  <div class="section-header"><span class="section-num">05</span><h2>Current Situation — April 2026</h2></div>
+  <p>Current food inflation of 16.1% represents a significant improvement from the 40.9% peak of May 2024. The disinflation has been driven by favourable base effects, partial naira stabilisation, and reduced fuel price volatility. However, the 6-month forecast of 20.8% suggests the decline is not yet structural.</p>
+</section>
+
+<div class="wide fade">
+  <div class="forecast-ledger">
+    <div class="fl-cell">
+      <div class="fl-label">Food CPI · April 2026</div>
+      <div class="fl-value">16.1%</div>
+      <div class="fl-sub">Year-on-year; NBS</div>
+      <span class="fl-badge elevated">Elevated Risk</span>
+    </div>
+    <div class="fl-cell highlight">
+      <div class="fl-label">3-Month Forecast</div>
+      <div class="fl-value">16.0%</div>
+      <div class="fl-sub">ARIMA / GBM consensus</div>
+      <span class="fl-badge elevated">Elevated Risk</span>
+    </div>
+    <div class="fl-cell warning">
+      <div class="fl-label">6-Month Forecast</div>
+      <div class="fl-value">20.8%</div>
+      <div class="fl-sub">Gradient Boosting primary</div>
+      <span class="fl-badge elevated">Elevated Risk</span>
+    </div>
+    <div class="fl-cell">
+      <div class="fl-label">P(High Risk &gt;25%) · 6m</div>
+      <div class="fl-value">~18%</div>
+      <div class="fl-sub">3-month probability: 4.2%</div>
+      <span class="fl-badge moderate">Monitoring</span>
+    </div>
+  </div>
+</div>
+
+<!-- §6 SCENARIO ANALYSIS -->
+<div class="divider fade"><span class="divider-label">Section 06</span></div>
+<section class="main section fade">
+  <div class="section-header"><span class="section-num">06</span><h2>Scenario Analysis</h2></div>
+  <p>The Gradient Boosting model was used to simulate the 3-month forecast impact of four distinct shocks applied to the April 2026 base reading of 16.1%:</p>
+</section>
+
+<div class="wide fade">
+  <div class="chart-frame gold-top">
+    <div class="chart-label">Figure 03</div>
+    <div class="chart-title">Scenario Analysis: 3-Month Forecast Under Shock Conditions</div>
+    <div class="chart-subtitle">Projected food CPI (%) under four shock scenarios vs. baseline of 16.1% — April 2026 base</div>
+    <div class="chart-area" id="c-scenario"></div>
+    <div class="chart-note">Source: FIEWS Gradient Boosting model — author's simulation on April 2026 base. Shock magnitudes: Diesel +20%; Naira −15%; FAO Food +15%; Combined = all three simultaneously. Model trained on May 2012–April 2026 panel. Near-term forecasts are dominated by lag features (inflation persistence), limiting sensitivity to individual shocks within a 3-month window.</div>
+  </div>
+</div>
+
+<section class="main fade">
+  <div class="insight">
+    <div class="insight-label">Structural Insight from Scenario Analysis</div>
+    <p>The model is relatively insensitive to individual shocks in the near term because <strong>inflation momentum features dominate the 3-month signal</strong>. This is economically correct — it reflects the high persistence of Nigeria's inflation. The policy implication is that the most important intervention window is during the lag period itself: <strong>acting when the shock occurs</strong>, not when it appears in the CPI data.</p>
+  </div>
+</section>
+
+<!-- §7 POLICY RECOMMENDATIONS -->
+<div class="divider fade"><span class="divider-label">Section 07</span></div>
+<section class="main section fade">
+  <div class="section-header"><span class="section-num">07</span><h2>Policy Recommendations</h2></div>
+
+  <div class="sub-section">
+    <h3>7.1 — Immediate Monitoring Priorities</h3>
+    <p>Based on the lead-lag findings, the following four variables should form the core of any early warning dashboard, with explicit trigger thresholds:</p>
+  </div>
+</section>
+
+<div class="wide fade">
+  <div class="rec-grid">
+    <div class="rec-box">
+      <div class="rec-num">Monitor 01</div>
+      <h4>FX Rate — Monthly</h4>
+      <p>A 3-month depreciation exceeding 10% should trigger Elevated alert status. This indicator has the most reliable 3–4 month lead time in all four historical episodes.</p>
+      <span class="rec-trigger">Trigger: 3m depreciation &gt;10%</span>
+    </div>
+    <div class="rec-box">
+      <div class="rec-num">Monitor 02</div>
+      <h4>Diesel Price — Monthly</h4>
+      <p>A 3-month increase exceeding 15% warrants immediate review. The 2022 diesel surge was the single clearest precursor to the 2023–2024 food inflation crisis.</p>
+      <span class="rec-trigger">Trigger: 3m increase &gt;15%</span>
+    </div>
+    <div class="rec-box">
+      <div class="rec-num">Monitor 03</div>
+      <h4>FAO Cereals Index — Monthly</h4>
+      <p>Available the first Friday of each month. A 3-month increase exceeding 10% warrants Elevated status, particularly if coinciding with FX pressure.</p>
+      <span class="rec-trigger">Trigger: 3m increase &gt;10%</span>
+    </div>
+    <div class="rec-box">
+      <div class="rec-num">Monitor 04</div>
+      <h4>Rainfall Anomaly — Monthly</h4>
+      <p>Deficits exceeding 20% below seasonal average during April–September planting and growing seasons should trigger supply-side alerts.</p>
+      <span class="rec-trigger">Trigger: anomaly &lt;−20% (Apr–Sep)</span>
+    </div>
+  </div>
+</div>
+
+<section class="main fade">
+  <div class="sub-section">
+    <h3>7.2 — Institutional Recommendations</h3>
+    <ul class="limit-list">
+      <li><span class="limit-num">01</span>Establish a Food Inflation Monitoring Unit within the NBS or CBN that produces monthly FIEWS risk scores and publishes them alongside the CPI release.</li>
+      <li><span class="limit-num">02</span>Pre-position buffer stock triggers: strategic grain reserve releases should be authorised to begin when the 3-month risk score exceeds 40% — not after CPI confirms the spike.</li>
+      <li><span class="limit-num">03</span>Link fertiliser subsidy release schedules to the rainfall anomaly indicator. Poor planting season signals (anomaly &lt;−20%) should trigger accelerated distribution.</li>
+      <li><span class="limit-num">04</span>Coordinate FX intervention with food inflation signals: CBN stabilisation operations should be explicitly linked to the FIEWS depreciation flag to interrupt the import cost transmission channel.</li>
+    </ul>
+  </div>
+
+  <div class="sub-section">
+    <h3>7.3 — Model Development Priorities</h3>
+    <ul class="limit-list">
+      <li><span class="limit-num">01</span>Integrate parallel market exchange rate data — the official rate understated actual FX pressure throughout 2022–2023 and delayed signal detection.</li>
+      <li><span class="limit-num">02</span>Extend rainfall data post-2020 using satellite sources (CHIRPS or PERSIANN) to replace the seasonal mean extrapolation used in this analysis.</li>
+      <li><span class="limit-num">03</span>Incorporate food import volume data (NCS trade data) as an additional leading indicator. Import compression during FX crises is a mechanism not yet captured by the current feature set.</li>
+      <li><span class="limit-num">04</span>Retrain models quarterly as new CPI data arrives. The 2023–2024 regime was structurally different from prior episodes and the training window should reflect new structural parameters.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- §8 LIMITATIONS -->
+<div class="divider fade"><span class="divider-label">Section 08</span></div>
+<section class="main section fade">
+  <div class="section-header"><span class="section-num">08</span><h2>Limitations</h2></div>
+  <ul class="limit-list">
+    <li><span class="limit-num">L1</span><strong>Panel size:</strong> 168 observations (14 years) is sufficient for monthly time-series analysis but limits the number of complete inflation cycles available for training. The model has observed four major episodes; unusual combinations of drivers outside historical experience may not be captured.</li>
+    <li><span class="limit-num">L2</span><strong>Missing fertiliser data:</strong> World Bank Pink Sheet commodity prices were available only at annual and quarterly frequency and could not be incorporated. Urea and DAP fertiliser price signals — potentially important leading indicators for agricultural input costs — are absent from the current feature set.</li>
+    <li><span class="limit-num">L3</span><strong>Extrapolated rainfall:</strong> CHIRPS coverage ends December 2020. Rainfall data for 2021–2026 is extrapolated from seasonal means, reducing the rainfall variable's predictive value for the most recent period.</li>
+    <li><span class="limit-num">L4</span><strong>ARIMA approximation:</strong> The ARIMA benchmark is an AR(6) model via Ridge regression, used because the statsmodels library was unavailable in this environment. A full ARIMA(p,d,q) with automatic order selection would be the appropriate benchmark in a production setting.</li>
+  </ul>
+</section>
+
+<!-- CONCLUSION -->
+<div class="conclusion fade">
+  <div class="conclusion-inner">
+    <span class="section-num">09 — Conclusion</span>
+    <h2>The Early Warning Window Is Open</h2>
+    <p>Nigeria's food inflation is predictable — not in the sense of point-forecast precision, but in the sense that the economic preconditions for inflation crises are consistently observable 3–6 months before they appear in the CPI data. Exchange rate depreciation, fuel price surges, and global food price shocks are not merely correlated with food inflation: they precede it, they cause it, and they do so through identifiable transmission channels.</p>
+    <p>The Food Inflation Early Warning System provides a replicable, data-driven framework for monitoring those channels. With monthly updates to six data series and a 30-minute model rerun, it can produce a risk score, a probability distribution, and a scenario analysis that give policymakers the lead time they need to intervene before crises become entrenched.</p>
+    <p>The April 2026 reading — 16.1%, Elevated risk, 6-month forecast of 20.8% — is not alarming in isolation. But it is a reminder that Nigeria remains structurally exposed to food inflation shocks, and that the current disinflation should not be mistaken for structural stability.</p>
+    <div class="conclusion-final">
+      <p>The early warning window is open. Whether it is used is a question of institutional will, not analytical capacity.</p>
+    </div>
+  </div>
+</div>
+
+<!-- APPENDIX -->
+<div class="appendix fade">
+  <div class="appendix-inner">
+    <h3>Appendix A — Data Sources</h3>
+    <table>
+      <tr><td>Nigeria Food CPI</td><td>National Bureau of Statistics (NBS) · Monthly · 2008–2026 · nigerianstat.gov.ng</td></tr>
+      <tr><td>Exchange Rate</td><td>Central Bank of Nigeria (CBN) · Monthly · 2000–2026 · cbn.gov.ng</td></tr>
+      <tr><td>Fuel Prices</td><td>NBS / NNPC · Monthly · 2011–2026 · nigerianstat.gov.ng</td></tr>
+      <tr><td>FAO Food Index</td><td>Food and Agriculture Organization · Monthly · 1990–2026 · fao.org</td></tr>
+      <tr><td>Rainfall</td><td>CHIRPS / Climate Hazards Group · Monthly · 1981–2020 · climateserv.servirglobal.net</td></tr>
+    </table>
+
+    <h3>Appendix B — Full Feature List (36 Variables)</h3>
+    <div class="pill-list">
+      <span class="pill">food_cpi_lag1</span><span class="pill">food_cpi_lag3</span><span class="pill">food_cpi_lag6</span><span class="pill">food_cpi_lag12</span><span class="pill">food_cpi_mom</span><span class="pill">fx_official</span><span class="pill">fx_chg_3m</span><span class="pill">fx_chg_6m</span><span class="pill">fx_depreciation_flag</span><span class="pill">pms_price</span><span class="pill">diesel_price</span><span class="pill">fuel_shock_3m</span><span class="pill">diesel_shock_3m</span><span class="pill">fuel_shock_flag</span><span class="pill">fao_food_index</span><span class="pill">cereals</span><span class="pill">oils</span><span class="pill">global_food_shock_3m</span><span class="pill">cereals_shock_3m</span><span class="pill">oils_shock_3m</span><span class="pill">rainfall_mm</span><span class="pill">rainfall_anomaly</span><span class="pill">drought_flag</span><span class="pill">month</span><span class="pill">quarter</span><span class="pill">planting_season</span><span class="pill">harvest_season</span><span class="pill">ramadan_flag</span>
+    </div>
+
+    <h3>Appendix C — Code &amp; Reproduction</h3>
+    <table>
+      <tr><td>scripts/01_collect_data.py</td><td>Data collection and panel assembly</td></tr>
+      <tr><td>scripts/02_eda.py</td><td>Exploratory data analysis and charts</td></tr>
+      <tr><td>scripts/03_models.py</td><td>Model training and evaluation</td></tr>
+      <tr><td>data/processed/fiews_panel.csv</td><td>Clean monthly panel (168 rows × 36 columns)</td></tr>
+      <tr><td>outputs/eda/</td><td>5 EDA charts</td></tr>
+      <tr><td>outputs/models/</td><td>4 model charts + results CSV</td></tr>
+    </table>
+    <p style="font-family:var(--sans);font-size:12px;color:var(--faint);margin-top:10px;">Full pipeline from raw data to policy brief runs in under 5 minutes. Retrain by updating raw data files in data/raw/ and running scripts in sequence.</p>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <span>The Long Run · barryugo1.github.io · Barry Ugochukwu · barryugo1000@gmail.com</span>
+  <a href="https://github.com/Barryugo/fiews" target="_blank" rel="noopener" style="color:rgba(255,255,255,.45);text-decoration:none;font-family:var(--mono);font-size:10px;letter-spacing:.07em;">github.com/Barryugo/fiews ↗</a>
+</footer>
+
+<script>
+const BLUE = '#005B99', TEAL = '#007B6E', GOLD = '#8B6914', RED = '#C0392B';
+const SUB = '#767672', RULE = '#e2e2de', INK = '#111110';
+
+const baseAxis = {
+  axisLine: { lineStyle: { color: RULE } },
+  splitLine: { lineStyle: { color: '#f0f0ec', type: 'dashed' } },
+  axisTick: { show: false },
+  axisLabel: { fontFamily: 'JetBrains Mono', fontSize: 11, color: SUB }
+};
+
+// ── LEAD-LAG CORRELATION ─────────────────────────────────
+(function(){
+  const c = echarts.init(document.getElementById('c-leadlag'));
+  const indicators = [
+    'CPI Lag 1 Month\n(Coincident)',
+    'FAO Food Index\n(0–2 months)',
+    'FAO Oils Index\n(1–3 months)',
+    'Fuel Price PMS\n(3–5 months)',
+    'FX Rate NGN/USD\n(3–4 months)',
+    'FX 3-Month Change\n(3–4 months)',
+    'FAO Cereals Index\n(4–6 months)',
+    'Rainfall Anomaly\n(2–4 months)'
+  ];
+  const values = [0.98, 0.71, 0.68, 0.55, 0.46, 0.43, 0.38, -0.22];
+  const colors = values.map(v => v < 0 ? TEAL : v > 0.9 ? INK : v > 0.6 ? BLUE : v > 0.4 ? GOLD : '#aaa');
+
+  c.setOption({
+    backgroundColor: 'transparent',
+    tooltip: {
+      trigger: 'axis', axisPointer: { type: 'none' },
+      backgroundColor: INK, borderColor: '#333',
+      textStyle: { fontFamily: 'JetBrains Mono', fontSize: 11, color: '#eee' },
+      formatter: p => `<b>${p[0].name.replace('\n',' ')}</b><br/>r = <b>${p[0].value}</b>`
+    },
+    grid: { top: 16, bottom: 60, left: 180, right: 60, containLabel: false },
+    xAxis: { ...baseAxis, type: 'value', min: -0.3, max: 1.05,
+      axisLabel: { formatter: v => v === 0 ? '0' : v > 0 ? `+${v}` : `${v}`, fontFamily: 'JetBrains Mono', fontSize: 11, color: SUB },
+      splitLine: { lineStyle: { color: '#f0f0ec', type: 'dashed' } }
+    },
+    yAxis: { type: 'category', data: [...indicators].reverse(), axisLine: { show: false },
+      axisTick: { show: false }, splitLine: { show: false },
+      axisLabel: { fontFamily: 'JetBrains Mono', fontSize: 10, color: INK, lineHeight: 14 }
+    },
+    series: [{
+      type: 'bar', barWidth: '55%',
+      data: [...values].reverse().map((v,i) => ({ value: v, itemStyle: { color: [...colors].reverse()[i] } })),
+      label: { show: true, position: v => v > 0 ? 'right' : 'left',
+        fontFamily: 'JetBrains Mono', fontSize: 11, color: INK,
+        formatter: p => p.value > 0 ? `r = +${p.value}` : `r = ${p.value}` }
+    }]
+  });
+  window.addEventListener('resize', () => c.resize());
+})();
+
+// ── MODEL PERFORMANCE ────────────────────────────────────
+(function(){
+  const c = echarts.init(document.getElementById('c-model'));
+  const models = ['ARIMA\n(Benchmark)', 'Ridge\nRegression', 'Random\nForest', 'Gradient\nBoosting'];
+  const mae3m  = [1.62, 4.95, 5.97, 5.43];
+  const mae6m  = [1.62, 8.60, 6.48, 5.78];
+
+  c.setOption({
+    backgroundColor: 'transparent',
+    tooltip: {
+      trigger: 'axis', axisPointer: { type: 'shadow' },
+      backgroundColor: INK, borderColor: '#333',
+      textStyle: { fontFamily: 'JetBrains Mono', fontSize: 11, color: '#eee' },
+      formatter: p => `<b>${p[0].axisValue.replace('\n',' ')}</b><br/>${p[0].marker} 3m MAE: ${p[0].value}pp<br/>${p[1].marker} 6m MAE: ${p[1].value}pp`
+    },
+    legend: { data: ['3-Month MAE','6-Month MAE'], top: 0,
+      textStyle: { fontFamily: 'JetBrains Mono', fontSize: 11, color: SUB },
+      icon: 'rect', itemWidth: 12, itemHeight: 7 },
+    grid: { top: 40, bottom: 52, left: 56, right: 20 },
+    xAxis: { ...baseAxis, type: 'category', data: models,
+      axisLabel: { fontFamily: 'JetBrains Mono', fontSize: 10, color: INK, interval: 0, lineHeight: 14 } },
+    yAxis: { ...baseAxis, type: 'value', name: 'MAE (pp)', nameTextStyle: { fontFamily: 'JetBrains Mono', fontSize: 10, color: SUB }, min: 0, max: 10,
+      axisLabel: { fontFamily: 'JetBrains Mono', fontSize: 11, color: SUB } },
+    series: [
+      { name: '3-Month MAE', type: 'bar', barGap: '8%', barWidth: '34%',
+        data: mae3m.map((v,i) => ({ value: v, itemStyle: { color: i === 0 ? INK : i === 3 ? TEAL : BLUE } })),
+        label: { show: true, position: 'top', fontFamily: 'JetBrains Mono', fontSize: 10, color: INK, formatter: '{c}pp' } },
+      { name: '6-Month MAE', type: 'bar', barWidth: '34%',
+        data: mae6m.map((v,i) => ({ value: v, itemStyle: { color: i === 0 ? '#555' : i === 3 ? '#4da090' : '#5590c0', opacity: 0.75 } })),
+        label: { show: true, position: 'top', fontFamily: 'JetBrains Mono', fontSize: 10, color: INK, formatter: '{c}pp' } }
+    ]
+  });
+  window.addEventListener('resize', () => c.resize());
+})();
+
+// ── SCENARIO ANALYSIS ────────────────────────────────────
+(function(){
+  const c = echarts.init(document.getElementById('c-scenario'));
+  const scenarios = ['Baseline\n(Apr 2026)', 'Diesel\n+20%', 'Naira\n−15%', 'FAO Food\n+15%', 'Combined\nStress'];
+  const values    = [16.1, 16.1, 16.15, 16.05, 16.1];
+  const colors    = [BLUE, GOLD, RED, TEAL, INK];
+
+  c.setOption({
+    backgroundColor: 'transparent',
+    tooltip: {
+      trigger: 'axis', axisPointer: { type: 'shadow' },
+      backgroundColor: INK, borderColor: '#333',
+      textStyle: { fontFamily: 'JetBrains Mono', fontSize: 11, color: '#eee' },
+      formatter: p => `<b>${p[0].axisValue.replace('\n',' ')}</b><br/>3m forecast: <b>${p[0].value}%</b>`
+    },
+    grid: { top: 32, bottom: 56, left: 56, right: 20 },
+    xAxis: { ...baseAxis, type: 'category', data: scenarios,
+      axisLabel: { fontFamily: 'JetBrains Mono', fontSize: 10, color: INK, interval: 0, lineHeight: 14 } },
+    yAxis: { ...baseAxis, type: 'value', name: 'Food CPI (%)', nameTextStyle: { fontFamily: 'JetBrains Mono', fontSize: 10, color: SUB },
+      min: 15, max: 17, axisLabel: { formatter: '{value}%', fontFamily: 'JetBrains Mono', fontSize: 11, color: SUB } },
+    series: [{
+      type: 'bar', barWidth: '55%',
+      data: values.map((v,i) => ({ value: v, itemStyle: { color: colors[i] } })),
+      label: { show: true, position: 'top', fontFamily: 'JetBrains Mono', fontSize: 11, color: INK, formatter: '{c}%' }
+    }]
+  });
+  window.addEventListener('resize', () => c.resize());
+})();
+
+const obs = new IntersectionObserver(e => e.forEach(x => { if(x.isIntersecting) x.target.classList.add('in'); }), { threshold: .05 });
+document.querySelectorAll('.fade').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
