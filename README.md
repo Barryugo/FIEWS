@@ -215,7 +215,7 @@ To run locally, copy the JSX into a React environment with `recharts` installed.
 
 ## License
 
-MIT — free to use, adapt, and build on with attribution.
+Apache 2.0 — free to use and adapt commercially, with attribution and patent rights included.
 
 ---
 
