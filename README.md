@@ -3,7 +3,7 @@
 > **Can we detect a food inflation surge 3–6 months before it appears in Nigeria's CPI data?**
 
 [![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python)](https://python.org)
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue)](LICENSE)
 [![Data](https://img.shields.io/badge/Data-NBS%20%7C%20CBN%20%7C%20FAO%20%7C%20CHIRPS-orange)]()
 [![Status](https://img.shields.io/badge/Status-Active-brightgreen)]()
 
